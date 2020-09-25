@@ -5,6 +5,12 @@ date: "9/24/2020"
 output: github_document
 ---
 
+## This is my solution to Homework 2
+
+# Problem 0
+# I have created a GitHub repo as well as local R Project named "p8105_hw2_jyc2171", followed by one single .Rmd file named "p8105_hw2_jyc2171.Rmd" that renders to GitHub repo.  A subdirectory was created to use the data files Mr. Trash Wheel (Problem 1), NYC transit data (Problem 2), and FiveThiryEight (Problem 3) using relative paths.  This homework shall be submitted via courseworks as a URL to my GitHub repo.  Thanks.
+
+# Problem 1 - Mr. Trash Wheel dataset.  Read and clean dataset.
 ```{r setup}
 library(tidyverse)
 library(readxl)

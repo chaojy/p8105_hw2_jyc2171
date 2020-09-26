@@ -8,7 +8,7 @@ output: github_document
 ## This is my solution to Homework 2
 
 ## Problem 0
-# I have created a GitHub repo as well as local R Project named "p8105_hw2_jyc2171", followed by one single .Rmd file named "p8105_hw2_jyc2171.Rmd" that renders to GitHub repo.  A subdirectory was created to use the data files Mr. Trash Wheel (Problem 1), NYC transit data (Problem 2), and FiveThiryEight (Problem 3) using relative paths.  This homework shall be submitted via courseworks as a URL to my GitHub repo.  Thanks.
+I have created a GitHub repo as well as local R Project named "p8105_hw2_jyc2171", followed by one single .Rmd file named "p8105_hw2_jyc2171.Rmd" that renders to GitHub repo.  A subdirectory was created to use the data files Mr. Trash Wheel (Problem 1), NYC transit data (Problem 2), and FiveThiryEight (Problem 3) using relative paths.  This homework shall be submitted via courseworks as a URL to my GitHub repo.  Thanks.
 
 ```{r setup}
 library(tidyverse)
@@ -73,5 +73,22 @@ precip_df =
 left_join(precip_df, month_df, by = "month")
 ```
 
-This dataset contains information from the Mr. Trash Wheel trash collector in Baltimore, MD.  As trash enters the inner harbor, the trashwheel collects that trash, and stores it in a dumpster.   The dataset contains information on year, month, and trash collected, including some specific kinds of trash.  There are a total of `r nrow(trashwheel_df)` rows in our final dataset.  Additional data sheets include monthly precipitation data.  
+This dataset contains information from the Mr. Trash Wheel trash collector in Baltimore, MD.  As trash enters the inner harbor, the trashwheel collects that trash, and stores it in a dumpster.   The dataset contains information on year, month, and trash collected, including some specific kinds of trash.  There are a total of `r nrow(trashwheel_df)` rows in our final dataset.  Additional data sheets include monthly precipitation data.  Median 
 
+For practice, as done in synchronous class session, re-running code with most updated Mr. Trashwheel data.
+
+```{r}
+trashwheel_df = 
+  read_xlsx(
+    "./data/Trash-Wheel-Collection-Totals-7-2020-1.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = cell_cols("A:N")) %>% 
+  janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
+  mutate(
+    sports_balls = round(sports_balls),
+    sports_balls = as.integer(sports_balls)
+  )
+```
+
+There are a total of `r nrow(trashwheel_df)` rows in our final dataset.

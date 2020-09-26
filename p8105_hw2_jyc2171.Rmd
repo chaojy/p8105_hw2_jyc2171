@@ -100,7 +100,13 @@ trashwheel_df =
 ## Problem 2 - NYC Transit data!
 
 ```{r}
-
+nyc_transit =
+  read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") 
+nyc_transit = janitor::clean_names(nyc_transit)
+select(nyc_transit, line, station_name, station_latitude, station_longitude, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11, entry, entrance_type, vending, ada) %>% 
+  
+as.logical(pull(nyc_transit, entry)
+)
 ```
 
 

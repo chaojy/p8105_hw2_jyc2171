@@ -150,6 +150,37 @@ transit_tidy =
 filter(transit_tidy, train_name == "A") %>% distinct(station_name)
 ```
 
-The data has been reformatted to longer, generating a new dataframe that consists of `r nrow(transit_tidy)` rows and `r ncol(transit_tidy)` columns.  There are `r filter(transit_tidy, train_name == "A") %>% distinct(station_name)` distinct stations that serve the A train.
+The data has been reformatted to long, generating a new dataframe that consists of `r nrow(transit_tidy)` rows and `r ncol(transit_tidy)` columns.  There are `r filter(transit_tidy, train_name == "A") %>% distinct(station_name)` distinct stations that serve the A train.
 
+## Problem 3 - FiveThirtyEight data!!
+
+```{r}
+pols_months =
+  read_csv("./data/fivethirtyeight_datasets/pols-month.csv") %>% 
+  separate(mon, c("year", "month", "day")) %>%
+  mutate(
+    month = recode(month, "01" = "january", "02" = "february", "03" = "march", "04" = "april", "05" =                              "may", "06" = "june", "07" = "july", "08" = "august", "09" = "september", "10" =                                "october", "11" = "november", "12" = "december"),
+    president = (prez_dem * 2) + prez_gop,
+    president = recode(president, "2" = "dem", "1" = "gop") 
+)
+
+select(pols_months, -prez_gop, -prez_dem, -day)
+  ##filter(prez_dem > 0) %>%    
+  ##mutate(
+  ##  prez_dem = prez_dem + 1) %>% 
+    
+   ## recodeprez_dem = filter(prez_dem > 0) + 1,
+  ##  president = prez_dem + prez_gop  
+  
+
+         
+
+
+                 #prez_gop = recode(prez_gop, "1" = "gop"),
+         #drop_na(prez_gop)
+         #prez_dem = recode(prez_dem, "1" = "dem"),
+         
+  
+  
+```
 

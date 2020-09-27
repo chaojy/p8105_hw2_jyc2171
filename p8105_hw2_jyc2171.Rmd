@@ -109,8 +109,18 @@ nyc_transit =
     entry = recode(entry, "YES" = "1", "NO" = "0"), 
     vending = recode(vending, "YES" = "1", "NO" = "0"),     
     ada = as.numeric(pull(nyc_transit, ada)),
+    route8 = as.character(pull(nyc_transit, route8)),
+    route9 = as.character(pull(nyc_transit, route9)),
+    route10 = as.character(pull(nyc_transit, route10)),
+    route11 = as.character(pull(nyc_transit, route11)),
     entrance_type = str_to_lower(entrance_type)
   )
+
+## filter vending == "0" and entry == "1" and provide column == station_name, nrows
+  
+## ada_number = as.numeric(pull(nyc_transit, ada)),
+
+##mutate(ada = as.numeric(pull(nyc_transit, ada))
 ```
 
 ## filter(nyc_transit, ada_number == 1) %>% 
@@ -122,4 +132,24 @@ nyc_transit =
 
 The NYC Transit data set contains information about New York City MTA subway stations.  The variables include station names, what line, the latitude and longitude of the station, which subway routes stop at the station, whether or not there is entry to that station, the types of entry, whether they are Americans with Diasabilities Act accessible, and, finally, whether there are vending machines.  For data cleaning, I retained/selected a certain number of specified variables and dropped the rest, converted the group variable names to snake case, and changed the contents of character variables to logical variables, and changed to lowercase letters.  There are a total of `r nrow(nyc_transit)` rows and `r ncol(nyc_transit)` columns.  These data seem to be tidy because they are in long format and list all of the possible data points.  
 There are a total of `r distinct(nyc_transit, station_name) %>% nrow()` distinct stations.
-There are `r filter(nyc_transit, ada == 1) %>% distinct(station_name) %>% nrow()` stations that are ADA compliant.
+There are `r filter(nyc_transit, ada == 1) %>% distinct(station_name) %>% nrow()` stations that are ADA compliant (Answer is 73 but I cannot get the R markdown file to knit).
+The number of station entrance/exits without vending machines that allow entrance is `r filter(nyc_transit, vending == 0 & entry == 1) %>% nrow` (Answer is 69).
+Therefore, the proportion of station entrance/exits without vending machines that allow entrance is: 69/1,868 = 3.7%.
+
+There are `r distinct(nyc_transit, route1) %>% nrow()` distinct train lines that exist (obtained by looking at distinct number of rows in the route1 variable, which should have all possible train lines listed).
+
+```{r}
+transit_tidy =
+  nyc_transit %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    values_to = "train_name"
+  )
+
+filter(transit_tidy, train_name == "A") %>% distinct(station_name)
+```
+
+The data has been reformatted to longer, generating a new dataframe that consists of `r nrow(transit_tidy)` rows and `r ncol(transit_tidy)` columns.  There are `r filter(transit_tidy, train_name == "A") %>% distinct(station_name)` distinct stations that serve the A train.
+
+

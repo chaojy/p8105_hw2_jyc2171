@@ -101,12 +101,12 @@ trashwheel_df =
 
 ```{r}
 nyc_transit =
-  read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") 
-nyc_transit = janitor::clean_names(nyc_transit)
-select(nyc_transit, line, station_name, station_latitude, station_longitude, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11, entry, entrance_type, vending, ada) %>% 
-  
-as.logical(pull(nyc_transit, entry)
-)
+  read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() %>%
+  select(-division, -exit_only, -staffing, -staff_hours, -ada_notes, -free_crossover, -north_south_street,               -east_west_street, -corner, -entrance_latitude, -entrance_longitude, -station_location,                         -entrance_location) %>% 
+  ## select(starts with("route"))
+  relocate(entry) %>% 
+  mutate(entry = recode(entry, "YES" = "1", "NO" = "0"))
 ```
 
 

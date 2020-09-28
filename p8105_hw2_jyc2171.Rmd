@@ -154,33 +154,57 @@ The data has been reformatted to long, generating a new dataframe that consists 
 
 ## Problem 3 - FiveThirtyEight data!!
 
+First, the pols-months.csv data.
+
 ```{r}
 pols_months =
   read_csv("./data/fivethirtyeight_datasets/pols-month.csv") %>% 
   separate(mon, c("year", "month", "day")) %>%
   mutate(
-    month = recode(month, "01" = "january", "02" = "february", "03" = "march", "04" = "april", "05" =                              "may", "06" = "june", "07" = "july", "08" = "august", "09" = "september", "10" =                                "october", "11" = "november", "12" = "december"),
     president = (prez_dem * 2) + prez_gop,
-    president = recode(president, "2" = "dem", "1" = "gop") 
-)
-
-select(pols_months, -prez_gop, -prez_dem, -day)
-  ##filter(prez_dem > 0) %>%    
-  ##mutate(
-  ##  prez_dem = prez_dem + 1) %>% 
-    
-   ## recodeprez_dem = filter(prez_dem > 0) + 1,
-  ##  president = prez_dem + prez_gop  
-  
-
-         
-
-
-                 #prez_gop = recode(prez_gop, "1" = "gop"),
-         #drop_na(prez_gop)
-         #prez_dem = recode(prez_dem, "1" = "dem"),
-         
-  
-  
+    president = recode(president, "2" = "dem", "1" = "gop"),
+    month = recode(month, "01" = "january", "02" = "february", "03" = "march", "04" = "april", "05" =                              "may", "06" = "june", "07" = "july", "08" = "august", "09" = "september", "10" =                                "october", "11" = "november", "12" = "december") 
+    ) %>% 
+    select(-prez_gop, -prez_dem, -day)
 ```
+
+Next, the snp.csv data.
+
+```{r}
+stock_df =
+  read_csv("./data/fivethirtyeight_datasets/snp.csv") %>% 
+  separate(date, c("month", "day", "year")) %>% 
+  select(-day) %>%
+  relocate(year) %>% 
+  mutate(
+    month = recode(month, "7" = "july", "6" = "june", "5" = "may", "4" = "april", "3" = "march", "2" = "february", "1" = "january", "12" = "december", "11" = "november", "10" = "october")
+  )
+```
+
+Finally, the unemployment data.
+
+```{r}
+unemploy_df =
+  read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  select(year, january = jan, february = feb, march = mar, april = apr, may, june = jun, july = jul, august =            aug, september = sep, october = oct, november = nov, december = dec) %>% 
+  pivot_longer(
+    january:december,
+    names_to = "month",
+    values_to = "unemployment"
+  )
+```
+
+Joining the three datasets.
+
+```{r}
+stock_pols =
+  left_join(pols_months, stock_df)
+```
+
+
+All three datasets have beencleaned and joined.
+The "pols-month" dataset contains the number national politicians who are democratric or republican at any time.  The dataset contains `r ncol(pols_months)` columns and `r nrow(pols_months)` rows. The cleaned dataset contains the following variables: year, month, number of governers who are dems or republicans, number of senators who are dems or republicans, number of representatives who are dems or republicans, and a president variable with the political party.  The years in the dataset range from 1947 t 2015
+The "snp" dataset contains the closing value of Standard & Poor's stock market index on a given month of a year.  The dataset contains `r ncol(stock_df)` columns and `r nrow(stock_df)` rows.  The years in the dataset range from 1950 to 2015.
+The "unemployment" dataset contains the percentage of unemployment per month in the associated year.  The datset was converted to long format and consists of `n col(unemploy_df)` columns and `n row(unempoly_df)` rows.  The years in the dataset range from 1948 to 2015.
 

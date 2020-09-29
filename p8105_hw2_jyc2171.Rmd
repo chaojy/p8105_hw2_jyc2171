@@ -134,11 +134,10 @@ transit_tidy =
     names_to = "route_number",
     values_to = "train_name"
   )
-
-filter(transit_tidy, train_name == "A") %>% distinct(station_name)
 ```
 
-The data has been reformatted to long, generating a new dataframe that consists of `r nrow(transit_tidy)` rows and `r ncol(transit_tidy)` columns.  There are `r filter(transit_tidy, train_name == "A") %>% distinct(station_name)` distinct stations that serve the A train.
+The data has been reformatted to long, generating a new dataframe that consists of `r nrow(transit_tidy)` rows and `r ncol(transit_tidy)` columns.  
+There are `r filter(transit_tidy, train_name == "A") %>% distinct(station_name) %>% nrow()` distinct stations that serve the A train.
 
 ## Problem 3 - FiveThirtyEight data!!
 
@@ -149,6 +148,7 @@ pols_months =
   read_csv("./data/fivethirtyeight_datasets/pols-month.csv") %>% 
   separate(mon, c("year", "month", "day")) %>%
   mutate(
+    year = as.numeric(year),
     president = (prez_dem * 2) + prez_gop,
     president = recode(president, "2" = "dem", "1" = "gop"),
     month = recode(month, "01" = "january", "02" = "february", "03" = "march", "04" = "april", "05" =                              "may", "06" = "june", "07" = "july", "08" = "august", "09" = "september", "10" =                                "october", "11" = "november", "12" = "december") 
@@ -166,7 +166,7 @@ stock_df =
   relocate(year) %>% 
   arrange(year) %>% 
   mutate(
-    close = as.numeric(pull(stock_df, close)),
+    year = as.numeric(year),
     month = recode(month, "7" = "july", "6" = "june", "5" = "may", "4" = "april", "3" = "march", "2" =                             "february", "1" = "january", "12" = "december", "11" = "november", "10" = "october", "9" =                      "september", "8" = "august")
   )
 ```
@@ -194,8 +194,6 @@ stock_pols =
 
 final_merge =
   left_join(stock_pols, unemploy_df)
-
-## year = as.numeric(year) put into mutate
 ```
 
 

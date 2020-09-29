@@ -67,19 +67,25 @@ month_df =
   tibble(
     month = 1:12,
     month_name = month.name
+    ) %>% 
+  mutate(
+    month = as.double(month)
   )
 
-precip_df = 
+precip_combined = 
   bind_rows(precip_2018, precip_2017) %>% 
   arrange(year)
-  
-left_join(precip_df, month_df, by = "month")
+
+left_join(precip_combined, month_df, by = "month") %>% 
+  select(-month) %>% 
+  rename(month = month_name) %>% 
+  relocate(year, month)
 ```
 
 This dataset contains information from the Mr. Trash Wheel trash collector in Baltimore, MD.  As trash enters the inner harbor, the trashwheel collects that trash, and stores it in a dumpster.   The dataset contains information on year, month, trash collected, weight and volume of trash collected, and some specific kinds of trash.  There are a total of `r nrow(trashwheel_df)` rows in our final dataset and `r ncol(trashwheel_df)` columns.  Additional data sheets are provided for the other members of the family: Professor Trash Wheel and Captain Trash Wheel.  Other sheets include monthly precipitation data from 2014 to 2019 and a homes powered note.  
 
 The Precip 2017 and Precip 2018 sheets contain information about monthly precipitation (measured in inches) in 2017 and 2018.  The Precip 2017 dataset contains `r ncol(precip_2017)` columns and `r nrow(precip_2017)` rows.  The Precip 2018 dataset contains `r ncol(precip_2018)` columns and `r nrow(precip_2018)` rows.  The datasets were joined together in one dataset in the "precip_df"
-with `r ncol(precip_df)` columns and `r nrow(precip_df)` rows.  
+with `r ncol(precip_combined)` columns and `r nrow(precip_combined)` rows.  
 
 The total precipitation in 2018 was `r sum(pull(precip_2018, total))` inches.
 The median number of sports balls in a dumpster in 2017 was `r trashwheel_df %>% filter(year == 2017) %>% pull(sports_balls) %>% median()` balls. 

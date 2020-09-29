@@ -106,29 +106,17 @@ nyc_transit =
   select(-division, -exit_only, -staffing, -staff_hours, -ada_notes, -free_crossover, -north_south_street,               -east_west_street, -corner, -entrance_latitude, -entrance_longitude, -station_location,                         -entrance_location) %>% 
   relocate(entry, ada) %>% 
   mutate(
-    entry = recode(entry, "YES" = "1", "NO" = "0"), 
-    vending = recode(vending, "YES" = "1", "NO" = "0"),     
-    ada = as.numeric(pull(nyc_transit, ada)),
-    route8 = as.character(pull(nyc_transit, route8)),
-    route9 = as.character(pull(nyc_transit, route9)),
-    route10 = as.character(pull(nyc_transit, route10)),
-    route11 = as.character(pull(nyc_transit, route11)),
-    entrance_type = str_to_lower(entrance_type)
+    entry = recode(entry, "YES" = TRUE,  "NO" = FALSE),
+    route8 = as.character(route8),
+    route9 = as.character(route9),
+    route10 = as.character(route10),
+    route11 = as.character(route11),
+    entrance_type = str_to_lower(entrance_type),
+    ada = str_to_lower(ada),
+    entry = str_to_lower(entry),
+    vending = str_to_lower(vending)
   )
-
-## filter vending == "0" and entry == "1" and provide column == station_name, nrows
-  
-## ada_number = as.numeric(pull(nyc_transit, ada)),
-
-##mutate(ada = as.numeric(pull(nyc_transit, ada))
 ```
-
-## filter(nyc_transit, ada_number == 1) %>% 
-## distinct(station_name) %>% 
-## nrow()
-
-## mutate(ada_numeric = as.numeric(pull(nyc_transit, ada)) %>% 
-## relocate(ada_numeric)
 
 The NYC Transit data set contains information about New York City MTA subway stations.  The variables include station names, what line, the latitude and longitude of the station, which subway routes stop at the station, whether or not there is entry to that station, the types of entry, whether they are Americans with Diasabilities Act accessible, and, finally, whether there are vending machines.  For data cleaning, I retained/selected a certain number of specified variables and dropped the rest, converted the group variable names to snake case, and changed the contents of character variables to logical variables, and changed to lowercase letters.  There are a total of `r nrow(nyc_transit)` rows and `r ncol(nyc_transit)` columns.  These data seem to be tidy because they are in long format and list all of the possible data points.  
 There are a total of `r distinct(nyc_transit, station_name) %>% nrow()` distinct stations.
@@ -176,8 +164,10 @@ stock_df =
   separate(date, c("month", "day", "year")) %>% 
   select(-day) %>%
   relocate(year) %>% 
+  arrange(year) %>% 
   mutate(
-    month = recode(month, "7" = "july", "6" = "june", "5" = "may", "4" = "april", "3" = "march", "2" = "february", "1" = "january", "12" = "december", "11" = "november", "10" = "october")
+    close = as.numeric(pull(stock_df, close)),
+    month = recode(month, "7" = "july", "6" = "june", "5" = "may", "4" = "april", "3" = "march", "2" =                             "february", "1" = "january", "12" = "december", "11" = "november", "10" = "october", "9" =                      "september", "8" = "august")
   )
 ```
 
@@ -193,6 +183,7 @@ unemploy_df =
     names_to = "month",
     values_to = "unemployment"
   )
+  
 ```
 
 Joining the three datasets.
@@ -200,6 +191,11 @@ Joining the three datasets.
 ```{r}
 stock_pols =
   left_join(pols_months, stock_df)
+
+final_merge =
+  left_join(stock_pols, unemploy_df)
+
+## year = as.numeric(year) put into mutate
 ```
 
 

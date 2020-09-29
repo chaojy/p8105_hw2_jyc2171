@@ -1,6 +1,6 @@
 ---
 title: "Homework 2"
-author: "Jerry Chao"
+author: "Jerry Chao Uni jyc2171"
 date: "9/24/2020"
 output: github_document
 ---
@@ -26,13 +26,15 @@ trashwheel_df =
     range = cell_cols("A:N")) %>% 
   janitor::clean_names() %>% 
   drop_na(dumpster) %>% 
+  separate(date, c("year", "month", "day")) %>% 
+  relocate(dumpster, year, month, day) %>% 
   mutate(
     sports_balls = round(sports_balls),
     sports_balls = as.integer(sports_balls)
   )
 ```
 
-Read precipitation data! for 2018 and 2017.
+Read precipitation data for 2018 and 2017.
 
 ```{r}
 precip_2018 =
@@ -68,7 +70,8 @@ month_df =
   )
 
 precip_df = 
-  bind_rows(precip_2018, precip_2017)
+  bind_rows(precip_2018, precip_2017) %>% 
+  arrange(year)
   
 left_join(precip_df, month_df, by = "month")
 ```

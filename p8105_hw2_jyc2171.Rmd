@@ -90,7 +90,7 @@ The median number of sports balls in a dumpster in 2017 was `r trashwheel_df %>%
 For practice, as done in synchronous class session, re-running code with most updated Mr. Trashwheel data.
 
 ```{r}
-trashwheel_df = 
+trashwheel2020_df = 
   read_xlsx(
     "./data/Trash-Wheel-Collection-Totals-7-2020-1.xlsx",
     sheet = "Mr. Trash Wheel",
@@ -124,7 +124,7 @@ nyc_transit =
   )
 ```
 
-The NYC Transit data set contains information about New York City MTA subway stations.  The variables include station names, what line, the latitude and longitude of the station, which subway routes stop at the station, whether or not there is entry to that station, the types of entry, whether they are Americans with Diasabilities Act accessible, and, finally, whether there are vending machines.  For data cleaning, I retained/selected a certain number of specified variables and dropped the rest, converted the group variable names to snake case, and changed the contents of character variables to logical variables, and changed to lowercase letters.  There are a total of `r nrow(nyc_transit)` rows and `r ncol(nyc_transit)` columns.  These data seem to be tidy because they are in long format and list all of the possible data points.  
+The NYC Transit data set contains information about New York City MTA subway stations.  The variables include station names, what line, the latitude and longitude of the station, which subway routes stop at the station, whether or not there is entry to that station, the types of entry, whether they are Americans with Diasabilities Act accessible, and, finally, whether there are vending machines.  For data cleaning, I retained/selected a certain number of specified variables and dropped the rest, converted the group variable names to snake case, and changed the contents of character variables to logical variables, and changed to lowercase letters.  There are a total of `r nrow(nyc_transit)` rows and `r ncol(nyc_transit)` columns.  At first I thought these data were tidy but now I think they are not.  This is because there are multiple route variables but only a handful of stations have 11 routes - there are many fields with no data (NA).  When you convert to long format, the number of fields with no data is substantially reduced.
 There are a total of `r distinct(nyc_transit, station_name) %>% nrow()` distinct stations.
 There are `r filter(nyc_transit, ada == 1) %>% distinct(station_name) %>% nrow()` stations that are ADA compliant (Answer is 73 but I cannot get the R markdown file to knit).
 The number of station entrance/exits without vending machines that allow entrance is `r filter(nyc_transit, vending == 0 & entry == 1) %>% nrow` (Answer is 69).

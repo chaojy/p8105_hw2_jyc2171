@@ -126,7 +126,7 @@ The NYC Transit data set contains information about New York City MTA subway sta
 There are a total of `r distinct(nyc_transit, station_name) %>% nrow()` distinct stations.
 There are `r filter(nyc_transit, ada == 1) %>% distinct(station_name) %>% nrow()` distinct stations that are ADA compliant.
 The number of station entrance/exits without vending machines that allow entrance is `r filter(nyc_transit, vending == 0 & entry == 1) %>% nrow`.
-Therefore, the proportion of distinct station entrance/exits (in the numerator) without vending machines that allow entrance (over the total number of #distinct# stations) is: 69/356 = 19.4%.
+Therefore, the proportion of distinct station entrance/exits (in the numerator) without vending machines that allow entrance (over the total number of distinct stations) is: 69/356 = 19.4%.
 
 There are `r distinct(nyc_transit, route1) %>% nrow()` distinct train lines that exist (obtained by looking at distinct number of rows in the route1 variable, which should have all possible train lines listed).
 

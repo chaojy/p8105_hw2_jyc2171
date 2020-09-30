@@ -65,8 +65,8 @@ Now combine annual precipitation.
 ```{r}
 month_df = 
   tibble(
-    month = 1:12,
-    month_name = month.name
+    month = as.double(1:12),
+    month_name = month.name,
   )
 
 precip_combined = 
@@ -186,8 +186,8 @@ unemploy_df =
     january:december,
     names_to = "month",
     values_to = "unemployment"
-  )
-  
+  ) %>% 
+  drop_na(unemployment)
 ```
 
 Joining the three datasets.
@@ -200,9 +200,8 @@ final_merge =
   left_join(stock_pols, unemploy_df)
 ```
 
-
-All three datasets have beencleaned and joined.
-The "pols-month" dataset contains the number national politicians who are democratric or republican at any time.  The dataset contains `r ncol(pols_months)` columns and `r nrow(pols_months)` rows. The cleaned dataset contains the following variables: year, month, number of governers who are dems or republicans, number of senators who are dems or republicans, number of representatives who are dems or republicans, and a president variable with the political party.  The years in the dataset range from 1947 t 2015
-The "snp" dataset contains the closing value of Standard & Poor's stock market index on a given month of a year.  The dataset contains `r ncol(stock_df)` columns and `r nrow(stock_df)` rows.  The years in the dataset range from 1950 to 2015.
-The "unemployment" dataset contains the percentage of unemployment per month in the associated year.  The datset was converted to long format and consists of `n col(unemploy_df)` columns and `n row(unempoly_df)` rows.  The years in the dataset range from 1948 to 2015.
+All three datasets have been cleaned and joined.
+The "pols-month" dataset contains the number of national politicians who are democrats or republican at a given year and month.  The dataset contains `r ncol(pols_months)` columns and `r nrow(pols_months)` rows. The cleaned dataset contains the following variables: year, month, number of governers who are dems or republicans, number of senators who are dems or republicans, number of representatives who are dems or republicans, and a president variable with the political party.  The years in the dataset range from 1947 t 2015.
+The "snp" dataset contains the closing value of Standard & Poor's stock market index on a given month of a year.  The dataset contains `r ncol(stock_df)` columns and `r nrow(stock_df)` rows.  The years in the dataset range from 1950 to 2015.  The average closing value in the dataset is `r mean(pull(stock_df, close))` and the median closing value in the dataset is `r median(pull(stock_df, close))`.
+The "unemployment" dataset contains the percentage of unemployment per month in the associated year.  The dataset was converted to long format and consists of `r ncol(unemploy_df)` columns and `r nrow(unemploy_df)` rows.  The years in the dataset range from 1948 to 2015.  After dropping missing data, the average unemployment in the dataset is `r mean(pull(unemploy_df, unemployment))` percent and the median umemployment is `r median(pull(unemploy_df, unemployment))` percent.
 
